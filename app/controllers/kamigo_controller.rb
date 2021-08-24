@@ -1,14 +1,13 @@
-require 'line/bot'
+equire 'line/bot'
 class KamigoController < ApplicationController
   protect_from_forgery with: :null_session
 
   def webhook
-
     # 學說話
-    reply_text = learn(channel_id, received_text)
+    reply_text = learn(received_text)
 
     # 關鍵字回覆
-    reply_text = keyword_reply(channel_id, received_text) if reply_text.nil?
+    reply_text = keyword_reply(received_text) if reply_text.nil?
 
     # 推齊
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
@@ -19,18 +18,18 @@ class KamigoController < ApplicationController
 
     # 傳送訊息到 line
     response = reply_to_line(reply_text)
-    
+
     # 回應 200
     head :ok
   end 
 
-    # 頻道 ID
+  # 頻道 ID
   def channel_id
     source = params['events'][0]['source']
     source['groupId'] || source['roomId'] || source['userId']
   end
 
-    # 儲存對話
+  # 儲存對話
   def save_to_received(channel_id, received_text)
     return if received_text.nil?
     Received.create(channel_id: channel_id, text: received_text)
@@ -53,7 +52,6 @@ class KamigoController < ApplicationController
 
     received_text
   end
-
 
   # 取得對方說的話
   def received_text
@@ -101,7 +99,7 @@ class KamigoController < ApplicationController
     line.reply_message(reply_token, message)
   end
 
-  # Line Bot API 物件初始化
+ # Line Bot API 物件初始化
   def line
     @line ||= Line::Bot::Client.new { |config|
        config.channel_secret = '068642867953c0cde3987cb696dccac7'
@@ -156,4 +154,5 @@ class KamigoController < ApplicationController
   def translate_to_korean(message)
     "#{message}油~"
   end
+
 end
