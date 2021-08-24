@@ -4,10 +4,10 @@ class KamigoController < ApplicationController
 
   def webhook
     # 學說話
-    reply_text = learn(received_text)
+    reply_text = learn(channel_id, received_text)
 
     # 關鍵字回覆
-    reply_text = keyword_reply(received_text) if reply_text.nil?
+    reply_text = keyword_reply(channel_id, received_text) if reply_text.nil?
 
     # 推齊
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
@@ -76,9 +76,11 @@ class KamigoController < ApplicationController
     KeywordMapping.create(keyword: keyword, message: message)
     '好哦～好哦～'
   end
-
+  
   # 關鍵字回覆
-  def keyword_reply(received_text)
+  def keyword_reply(channel_id, received_text)
+    message = KeywordMapping.where(channel_id: channel_id, keyword: received_text).last&.message
+    return message unless message.nil?
     KeywordMapping.where(keyword: received_text).last&.message
   end
 
