@@ -9,7 +9,7 @@ gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 
 gem 'pg'
 
-gem 'sqlite3'
+# gem 'sqlite3'
 
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
