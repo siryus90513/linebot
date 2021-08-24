@@ -9,12 +9,49 @@ class KamigoController < ApplicationController
     # 關鍵字回覆
     reply_text = keyword_reply(received_text) if reply_text.nil?
 
+    # 推齊
+    reply_text = echo2(channel_id, received_text) if reply_text.nil?
+
+    # 記錄對話
+    save_to_received(channel_id, received_text)
+    save_to_reply(channel_id, reply_text)
+
     # 傳送訊息到 line
     response = reply_to_line(reply_text)
-    
+
     # 回應 200
     head :ok
   end 
+
+  # 頻道 ID
+  def channel_id
+    source = params['events'][0]['source']
+    source['groupId'] || source['roomId'] || source['userId']
+  end
+
+  # 儲存對話
+  def save_to_received(channel_id, received_text)
+    return if received_text.nil?
+    Received.create(channel_id: channel_id, text: received_text)
+  end
+
+  # 儲存回應
+  def save_to_reply(channel_id, reply_text)
+    return if reply_text.nil?
+    Reply.create(channel_id: channel_id, text: reply_text)
+  end
+  
+  def echo2(channel_id, received_text)
+    # 如果在 channel_id 最近沒人講過 received_text，卡米狗就不回應
+    recent_received_texts = Received.where(channel_id: channel_id).last(5)&.pluck(:text)
+    return nil unless received_text.in? recent_received_texts
+    
+    # 如果在 channel_id 卡米狗上一句回應是 received_text，卡米狗就不回應
+    last_reply_text = Reply.where(channel_id: channel_id).last&.text
+    return nil if last_reply_text == received_text
+
+    received_text
+  end
 
   # 取得對方說的話
   def received_text
@@ -62,14 +99,13 @@ class KamigoController < ApplicationController
     line.reply_message(reply_token, message)
   end
 
-  # Line Bot API 物件初始化
+ # Line Bot API 物件初始化
   def line
     @line ||= Line::Bot::Client.new { |config|
        config.channel_secret = '068642867953c0cde3987cb696dccac7'
     config.channel_token = 'VUzbj9NMqRMCyDkbT3STQaXDCpIL7cMhLCTMbkfi153QP3RYghdWgcdFnWs02OHj5UvCZAuW/wsnBgLRwcC/o7dA1Pize8UG8A5Dsr/kIiw1t88GCVFBv8zAQW9jPiqtMIxArSfoXsctpvEN13SpwgdB04t89/1O/w1cDnyilFU='
     }
   end
-
 
   def eat
     render plain: "吃土啦"
@@ -117,4 +153,5 @@ class KamigoController < ApplicationController
   def translate_to_korean(message)
     "#{message}油~"
   end
+
 end
