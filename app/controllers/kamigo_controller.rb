@@ -3,6 +3,19 @@ class KamigoController < ApplicationController
   protect_from_forgery with: :null_session
 
   def webhook
+      # 查天氣
+  reply_image = get_weather(received_text)
+
+  # 有查到的話 後面的事情就不作了
+  unless reply_image.nil?
+    # 傳送訊息到 line
+    response = reply_image_to_line(reply_image)
+
+    # 回應 200
+    head :ok
+
+    return 
+  end
     # 學說話
     reply_text = learn(channel_id, received_text)
 
@@ -22,6 +35,57 @@ class KamigoController < ApplicationController
     # 回應 200
     head :ok
   end 
+
+
+  def get_weather(received_text)
+    return nil unless received_text.include? '天氣'
+    upload_to_imgur(get_weather_from_cwb)
+  end
+
+  #增加一個上傳圖片到 imgur 的函數
+   def upload_to_imgur(image_url)
+    url = URI("https://api.imgur.com/3/image")
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    request = Net::HTTP::Post.new(url)
+    request["authorization"] = 'Client-ID 31892b5246933aa'
+
+    request.set_form_data({"image" => image_url})
+    response = http.request(request)
+    json = JSON.parse(response.read_body)
+    begin
+      json['data']['link'].gsub("http:","https:")
+    rescue
+      nil
+    end
+  end
+
+  #增加一個取得最新雷達回波圖的函數
+   def get_weather_from_cwb
+    uri = URI('http://www.cwb.gov.tw/V7/js/HDRadar_1000_n_val.js')
+    response = Net::HTTP.get(uri)
+    start_index = response.index('","') + 3
+    end_index = response.index('"),') - 1
+    "http://www.cwb.gov.tw" + response[start_index..end_index]
+  end
+
+  # 傳送圖片到 line
+  def reply_image_to_line(reply_image)
+    return nil if reply_image.nil?
+    
+    # 取得 reply token
+    reply_token = params['events'][0]['replyToken']
+    
+    # 設定回覆訊息
+    message = {
+      type: "image",
+      originalContentUrl: reply_image,
+      previewImageUrl: reply_image
+    }
+
+    # 傳送訊息
+    line.reply_message(reply_token, message)
+  end
 
   # 頻道 ID
   def channel_id
