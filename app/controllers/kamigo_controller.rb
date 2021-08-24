@@ -5,10 +5,10 @@ class KamigoController < ApplicationController
   def webhook
 
     # 學說話
-    reply_text = learn(received_text)
+    reply_text = learn(channel_id, received_text)
 
     # 關鍵字回覆
-    reply_text = keyword_reply(received_text) if reply_text.nil?
+    reply_text = keyword_reply(channel_id, received_text) if reply_text.nil?
 
     # 推齊
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
