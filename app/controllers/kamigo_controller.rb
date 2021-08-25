@@ -53,6 +53,7 @@ class KamigoController < ApplicationController
     request.set_form_data({"image" => image_url})
     response = http.request(request)
     json = JSON.parse(response.read_body)
+    puts json
     begin
       json['data']['link'].gsub("http:","https:")
     rescue
