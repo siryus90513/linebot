@@ -63,11 +63,12 @@ class KamigoController < ApplicationController
 
   #增加一個取得最新雷達回波圖的函數
    def get_weather_from_cwb
-    uri = URI('http://www.cwb.gov.tw/V7/js/HDRadar_1000_n_val.js')
+    uri = URI('https://www.cwb.gov.tw/Data/js/obs_img/Observe_radar_rain.js')
     response = Net::HTTP.get(uri)
-    start_index = response.index('","') + 3
-    end_index = response.index('"),') - 1
-    "http://www.cwb.gov.tw" + response[start_index..end_index]
+    image_url = response.match /(CV1_RCNT_3600\/CV1_RCNT_3600_[0-9]*.png)/
+    # start_index = response.index('","') + 3
+    # end_index = response.index('"),') - 1
+    "https://www.cwb.gov.tw/Data/radar_rain/" + image_url
   end
 
   # 傳送圖片到 line
