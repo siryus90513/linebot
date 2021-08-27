@@ -185,7 +185,7 @@ class KamigoController < ApplicationController
 
   # 傳送訊息到 line
   def reply_to_line(reply_text)
-    return nil if reply_text.nil?
+    reply_text = ['蛤','三小','哈哈','喔是喔','你說的都對','好喔','靠邀','白爛','好笑嗎'].sample if reply_text.nil?
     
     # 取得 reply token
     reply_token = params['events'][0]['replyToken']
