@@ -152,7 +152,7 @@ class KamigoController < ApplicationController
 
     return nil unless received_text[0..3] == '午餐吃啥'
 
-     ['晨間廚房','武媽媽','81HOME','地中海','龍座','黃媽媽','泰麻吉','品味香','洪媽媽'].sample
+     ['晨間廚房','武媽媽','81HOME','地中海','龍座','黃媽媽','泰麻吉','品味香','洪媽媽','阿寶','123'].sample
   end
 
 
