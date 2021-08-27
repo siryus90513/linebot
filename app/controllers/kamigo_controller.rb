@@ -22,8 +22,7 @@ class KamigoController < ApplicationController
     reply_text = learn(channel_id, received_text)
     
      # random
-    reply_text = feeling(received_text) 
-
+    reply_text = feeling(received_text) if reply_text.nil?
 
     # 關鍵字回覆
     reply_text = keyword_reply(channel_id, received_text) if reply_text.nil?
