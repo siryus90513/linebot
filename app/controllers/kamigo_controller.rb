@@ -19,7 +19,7 @@ class KamigoController < ApplicationController
 
 
     # 學說話
-    reply_text = learn(channel_id, received_text) if reply_text.nil?
+    reply_text = learn(channel_id, received_text) 
 
     # 關鍵字回覆
     reply_text = keyword_reply(channel_id, received_text) if reply_text.nil?
@@ -28,7 +28,7 @@ class KamigoController < ApplicationController
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
 
     # random
-    reply_text = feeling(received_text) 
+    reply_text = feeling(received_text) if reply_text.nil?
 
     # 記錄對話
     save_to_received(channel_id, received_text)
