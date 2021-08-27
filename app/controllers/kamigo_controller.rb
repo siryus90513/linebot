@@ -28,7 +28,7 @@ class KamigoController < ApplicationController
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
 
     # random
-    reply_text = feeling(received_text) if reply_text.nil?
+    reply_text = feeling(received_text) 
 
     # 記錄對話
     save_to_received(channel_id, received_text)
@@ -138,6 +138,7 @@ class KamigoController < ApplicationController
       
      ['不錯', '還好', '不太行'].sample
   end
+
 
   # 學說話
   def learn(channel_id, received_text)
