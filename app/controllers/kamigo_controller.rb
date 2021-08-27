@@ -128,7 +128,7 @@ class KamigoController < ApplicationController
   # 學說話
   def learn(channel_id, received_text)
     #如果開頭不是 卡米狗學說話; 就跳出
-    return nil unless received_text[0..6] == '卡米狗學說話;'
+    return nil unless received_text[0..5] == '米煮波學說話'
     
     received_text = received_text[7..-1]
     semicolon_index = received_text.index(';')
@@ -140,8 +140,10 @@ class KamigoController < ApplicationController
     message = received_text[semicolon_index+1..-1]
 
    KeywordMapping.create(channel_id: channel_id, keyword: keyword, message: message)
-    '好哦～好哦～'
+    '好哦> <'
   end
+
+
 
 # 關鍵字回覆
   def keyword_reply(channel_id, received_text)
