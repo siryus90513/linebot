@@ -16,6 +16,8 @@ class KamigoController < ApplicationController
 
     return 
   end
+
+
     # 學說話
     reply_text = learn(channel_id, received_text)
 
@@ -24,6 +26,9 @@ class KamigoController < ApplicationController
 
     # 推齊
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
+
+    # random
+    reply_text = randomnum(received_text) if reply_text.nil?
 
     # 記錄對話
     save_to_received(channel_id, received_text)
@@ -123,6 +128,17 @@ class KamigoController < ApplicationController
   def received_text
     message = params['events'][0]['message']
     message['text'] unless message.nil?
+  end
+
+  def randomnum(received_text)
+
+    return nil unless received_text[0..5] == '米煮波挑一個'
+
+    received_text = received_text[7..-1]
+    number = File.read('received_text').to_i 
+
+    return rand(number)
+
   end
 
   # 學說話
