@@ -4,7 +4,7 @@ class KamigoController < ApplicationController
 
   def webhook
       # 查天氣
-  reply_image = get_weather(received_text) if reply_text.nil?
+  reply_image = get_weather(received_text) 
 
   # 有查到的話 後面的事情就不作了
   unless reply_image.nil?
@@ -20,7 +20,9 @@ class KamigoController < ApplicationController
 
     # 學說話
     reply_text = learn(channel_id, received_text)
-
+    
+     # random
+    reply_text = feeling(received_text) 
 
 
     # 關鍵字回覆
@@ -29,8 +31,7 @@ class KamigoController < ApplicationController
     # 推齊
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
 
-    # random
-    reply_text = feeling(received_text)  
+   
 
     # 記錄對話
     save_to_received(channel_id, received_text)
