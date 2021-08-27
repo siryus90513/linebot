@@ -24,6 +24,9 @@ class KamigoController < ApplicationController
      # random
     reply_text = feeling(received_text) if reply_text.nil?
 
+    # chooselunch 
+    reply_text = chooselunch(received_text) if reply_text.nil?
+
      # 推齊
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
 
@@ -130,8 +133,10 @@ class KamigoController < ApplicationController
 
   # 取得對方說的話
   def received_text
+
     message = params['events'][0]['message']
     message['text'] unless message.nil?
+
   end
 
   def feeling(received_text)
@@ -141,6 +146,13 @@ class KamigoController < ApplicationController
 
       
      ['不錯', '還好', '不太行'].sample
+  end
+
+  def chooselunch(received_text)
+
+    return nil unless received_text[0..3] == '午餐吃啥'
+
+     ['晨間廚房','武媽媽','81HOME','地中海','龍座','黃媽媽','泰麻吉','品味香','洪媽媽'].sample
   end
 
 
