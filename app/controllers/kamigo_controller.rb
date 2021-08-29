@@ -153,7 +153,8 @@ class KamigoController < ApplicationController
 
 
 
-    rand(received_text.to_i).to_s
+    message = rand(received_text.to_i).to_s
+    message
   end
 
 
