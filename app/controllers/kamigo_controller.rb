@@ -18,19 +18,19 @@ class KamigoController < ApplicationController
     end
 
 
-    # 隨機數字
-   reply_text = randnum(received_text) 
-
     # 學說話
-    reply_text = learn(channel_id, received_text)  if reply_text.nil?
-    
-     # choosedinner
+    reply_text = learn(channel_id, received_text)  
+
+    # 隨機數字
+    reply_text = randnum(received_text) if reply_text.nil?
+
+    # choosedinner
     reply_text = choosedinner(received_text) if reply_text.nil?
 
     # chooselunch 
     reply_text = chooselunch(received_text) if reply_text.nil?
 
-     # 推齊
+    # 推齊
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
 
     # 關鍵字回覆
