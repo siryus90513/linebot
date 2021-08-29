@@ -22,7 +22,7 @@ class KamigoController < ApplicationController
     reply_text = learn(channel_id, received_text)
     
      # random
-    reply_text = feeling(received_text) if reply_text.nil?
+    reply_text = dinner(received_text) if reply_text.nil?
 
     # chooselunch 
     reply_text = chooselunch(received_text) if reply_text.nil?
@@ -139,16 +139,16 @@ class KamigoController < ApplicationController
 
   end
 
-  def feeling(received_text)
+  def dinner(received_text)
 
-    return nil unless received_text[0..1] == '晚餐'
+    return nil unless received_text[0..2] == '晚餐吃'
 
 
       
      ['武媽媽','81HOME','豪緯麵食館','鍋道一號','外賣','咖哩拌飯','7-11','吃我','不要吃','八方雲集',
       '三米藍','全家','大四喜牛肉麵','伊卓島','地中海','龍座','黃媽媽','泰麻吉','品味香','洪媽媽',
-      '阿寶','早餐吃啥','麥當勞','肯德基','初八拉麵','歐伊系精緻早餐','豐正食堂','阿基鍋燒麵','窩不知道','我想一下'
-      ,'王仔','嘉農','自己煮'].sample
+      '阿寶','早餐吃啥','麥當勞','肯德基','初八拉麵','歐伊系精緻早餐','豐正食堂','阿基鍋燒麵','窩不知道','我想一下',
+      '王仔','嘉農','自己煮'].sample
   end
 
   def chooselunch(received_text)
