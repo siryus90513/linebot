@@ -25,7 +25,7 @@ class KamigoController < ApplicationController
     reply_text = learn(channel_id, received_text) 
     
      # choosedinner
-    reply_text = choosedinner(received_text) if reply_text.nil?
+    reply_text = choosedinner(received_text) 
 
     # chooselunch 
     reply_text = chooselunch(received_text) if reply_text.nil?
