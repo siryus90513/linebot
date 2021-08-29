@@ -19,7 +19,7 @@ class KamigoController < ApplicationController
 
 
     # 隨機數字
-     reply_text = randnum(received_text) 
+    # reply_text = randnum(received_text) 
 
     # 學說話
     reply_text = learn(channel_id, received_text) 
