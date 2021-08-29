@@ -141,7 +141,7 @@ class KamigoController < ApplicationController
 
   def feeling(received_text)
 
-    return nil unless received_text[0..3] == '晚餐吃啥'
+    return nil unless received_text[0..1] == '晚餐'
 
 
       
