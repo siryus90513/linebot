@@ -6,23 +6,23 @@ class KamigoController < ApplicationController
       # 查天氣
   reply_image = get_weather(received_text) 
 
-  # 有查到的話 後面的事情就不作了
-  unless reply_image.nil?
-    # 傳送訊息到 line
-    response = reply_image_to_line(reply_image)
+    # 有查到的話 後面的事情就不作了
+    unless reply_image.nil?
+      # 傳送訊息到 line
+      response = reply_image_to_line(reply_image)
 
-    # 回應 200
-    head :ok
+      # 回應 200
+      head :ok
 
-    return 
-  end
+      return 
+    end
 
 
     # 學說話
     reply_text = learn(channel_id, received_text)
     
      # random
-    reply_text = dinner(received_text) if reply_text.nil?
+    reply_text = dinner(received_text) 
 
     # chooselunch 
     reply_text = chooselunch(received_text) if reply_text.nil?
@@ -32,8 +32,6 @@ class KamigoController < ApplicationController
 
     # 關鍵字回覆
     reply_text = keyword_reply(channel_id, received_text) if reply_text.nil?
-
-   
 
    
 
