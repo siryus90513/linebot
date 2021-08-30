@@ -6,22 +6,23 @@ class KamigoController < ApplicationController
       # 查天氣
   reply_image = get_weather(received_text) 
 
-    # 有查到的話 後面的事情就不作了
-    unless reply_image.nil?
-      # 傳送訊息到 line
-      response = reply_image_to_line(reply_image)
+  # 有查到的話 後面的事情就不作了
+  unless reply_image.nil?
+    # 傳送訊息到 line
+    response = reply_image_to_line(reply_image)
 
-      # 回應 200
-      head :ok
+    # 回應 200
+    head :ok
 
-      return 
-    end
+    return 
+  end
 
 
     # 學說話
     reply_text = learn(channel_id, received_text)
     
-   
+     # random
+    reply_text = dinner(received_text) if reply_text.nil?
 
     # chooselunch 
     reply_text = chooselunch(received_text) if reply_text.nil?
@@ -31,6 +32,8 @@ class KamigoController < ApplicationController
 
     # 關鍵字回覆
     reply_text = keyword_reply(channel_id, received_text) if reply_text.nil?
+
+   
 
    
 
@@ -49,7 +52,6 @@ class KamigoController < ApplicationController
   def get_weather(received_text)
     return nil unless received_text.include? '天氣'
     upload_to_imgur(get_weather_from_cwb)
-    '天氣真好'
   end
 
   #增加一個上傳圖片到 imgur 的函數
@@ -141,13 +143,13 @@ class KamigoController < ApplicationController
 
     return nil unless received_text[0..2] == '晚餐吃'
 
+
       
      ['武媽媽','81HOME','豪緯麵食館','鍋道一號','外賣','咖哩拌飯','7-11','吃我','不要吃','八方雲集',
       '三米藍','全家','大四喜牛肉麵','伊卓島','地中海','龍座','黃媽媽','泰麻吉','品味香','洪媽媽',
       '麥當勞','肯德基','初八拉麵','豐正食堂','阿基鍋燒麵','窩不知道','我想一下','王仔','嘉農','自己煮',
       '夯極味','8鍋','瘋beef','A咖','小羚','味自慢','阿吉麵攤','煮動一點','小豬很忙','一番',
-      '二口','薩克廚房','中正快炒','老地方','花亭壽司','松坂家','阜壽司','紅樓','伊豆壽司','允好食堂'
-      'ㄎㄎ韓食','韓山寺','米六里'].sample
+      '二口','薩克廚房','中正快炒','老地方','花亭壽司','松坂家','阜壽司','紅樓','伊豆壽司','允好食堂'].sample
   end
 
   def chooselunch(received_text)
@@ -157,7 +159,7 @@ class KamigoController < ApplicationController
      ['晨間廚房','武媽媽','81HOME','豪緯麵食館','鍋道一號','外賣','咖哩拌飯','7-11','吃我','不要吃',
       '三米藍','全家','大四喜牛肉麵','伊卓島','地中海','龍座','黃媽媽','泰麻吉','品味香','洪媽媽',
       '阿寶','123早餐屋','早餐吃啥','麥當勞','肯德基','初八拉麵','鹿初Brunch','布格早午餐','吉多多早午餐店','歐伊系精緻早餐',
-      '豐正食堂','阿基鍋燒麵','窩不知道','八方雲集','我想一下','王仔','小間早午餐','嘉農','米六里'].sample
+      '豐正食堂','阿基鍋燒麵','窩不知道','八方雲集','我想一下','王仔','小間早午餐','嘉農'].sample
   end
 
 
