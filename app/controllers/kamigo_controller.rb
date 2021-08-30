@@ -21,8 +21,7 @@ class KamigoController < ApplicationController
     # 學說話
     reply_text = learn(channel_id, received_text)
     
-     # random
-    reply_text = dinner(received_text) 
+   
 
     # chooselunch 
     reply_text = chooselunch(received_text) if reply_text.nil?
