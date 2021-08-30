@@ -1,4 +1,5 @@
 require 'line/bot'
+
 class KamigoController < ApplicationController
   protect_from_forgery with: :null_session
 
@@ -20,8 +21,12 @@ class KamigoController < ApplicationController
 
     # 學說話
     reply_text = learn(channel_id, received_text)
+
+    # 選 A/B/C
+
+    reply_text = choose(received_text) if reply_text.nil?
     
-     # random
+     # dinner 
     reply_text = dinner(received_text) if reply_text.nil?
 
     # chooselunch 
@@ -52,7 +57,7 @@ class KamigoController < ApplicationController
   def get_weather(received_text)
     return nil unless received_text.include? '天氣'
     # upload_to_imgur(get_weather_from_cwb)
-    
+
     '天氣真好'
   end
 
@@ -141,6 +146,9 @@ class KamigoController < ApplicationController
 
   end
 
+
+
+
   def dinner(received_text)
 
     return nil unless received_text[0..2] == '晚餐吃'
@@ -182,6 +190,18 @@ class KamigoController < ApplicationController
    KeywordMapping.create(channel_id: channel_id, keyword: keyword, message: message)
     '好哦> <'
   end
+
+    # 選一個  選 A B C
+
+  def choose(received_text)
+
+    return nil unless received_text[0..1] == '選 '
+
+    received_text = received_text[2..-1]
+
+    [received_text.split(' ')].sample
+
+  end 
 
 
 
