@@ -141,7 +141,7 @@ class KamigoController < ApplicationController
 
   def dinner(received_text)
 
-    return nil unless received_text[0..2] == "晚餐吃"
+    return nil unless received_text[0..2] == '晚餐吃'
 
       
      ['武媽媽','81HOME','豪緯麵食館','鍋道一號','外賣','咖哩拌飯','7-11','吃我','不要吃','八方雲集',
