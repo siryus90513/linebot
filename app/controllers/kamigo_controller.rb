@@ -51,7 +51,8 @@ class KamigoController < ApplicationController
 
   def get_weather(received_text)
     return nil unless received_text.include? '天氣'
-    upload_to_imgur(get_weather_from_cwb)
+    # upload_to_imgur(get_weather_from_cwb)
+    
     '天氣真好'
   end
 
