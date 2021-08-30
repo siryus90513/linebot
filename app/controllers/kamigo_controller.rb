@@ -192,7 +192,7 @@ class KamigoController < ApplicationController
 
   # 傳送訊息到 line
   def reply_to_line(reply_text)
-    return nil if reply_text.nil?
+    return '7414' if reply_text.nil?
     
     # 取得 reply token
     reply_token = params['events'][0]['replyToken']
