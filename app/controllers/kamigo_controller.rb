@@ -198,9 +198,11 @@ class KamigoController < ApplicationController
     return nil unless received_text[0..1] == '選 '
 
     received_text = received_text[2..-1]
+    arr = Array.new 
+    arr = received_text.split(' ')
+   
 
-    [received_text.split(' ')].sample
-
+     arr.sample
   end 
 
 
