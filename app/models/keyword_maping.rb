@@ -1,2 +1,0 @@
-class KeywordMaping < ApplicationRecord
-end

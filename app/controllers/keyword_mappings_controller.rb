@@ -1,4 +1,5 @@
 class KeywordMappingsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_keyword_mapping, only: %i[ show edit update destroy ]
 
   # GET /keyword_mappings or /keyword_mappings.json

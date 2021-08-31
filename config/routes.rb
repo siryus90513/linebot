@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :keyword_mapings
+  devise_for :users
   resources :keyword_mappings
   post '/kamigo/webhook', to: 'kamigo#webhook'
   get '/kamigo/eat', to: 'kamigo#eat'
