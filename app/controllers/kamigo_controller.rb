@@ -123,7 +123,7 @@ class KamigoController < ApplicationController
 
     return nil unless received_text[0] == '算'
 
-    received_text = received_text[0..-1]
+    received_text = received_text[1..-1]
 
     a = "#{received_text}"
 
