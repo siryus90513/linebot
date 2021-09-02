@@ -4,8 +4,12 @@ class KamigoController < ApplicationController
   protect_from_forgery with: :null_session
 
   def webhook
-
-    if  channel.status(channel_id) == 'quiet'
+    # 改變聊天室狀態
+    reply_text = change_channel_status(channel_id, received_text)
+    
+    # 檢測聊天室狀態
+    channelstatus = channel_status(channel_id) 
+    if channelstatus.nil?
       # 回應 200
       head :ok
 
@@ -52,6 +56,22 @@ class KamigoController < ApplicationController
     # 回應 200
     head :ok
   end 
+
+
+   # 改變聊天室狀態關鍵字
+  def change_channel_status(channel_id, received_text)
+    return nil unless received_text[0..5] == '卡米熊安靜' or received_text[0..5] == '卡米熊講話'
+    ChannelStatus.create(channel_id: channel_id, status: 'quiet') if received_text[0..5] == '卡米熊安靜'
+    ChannelStatus.create(channel_id: channel_id, status: 'speak') if received_text[0..5] == '卡米熊講話'
+    received_text
+  end
+
+  # 檢測聊天室狀態
+  def channel_status(channel_id)
+    statuses = ChannelStatus.where(channel_id: channel_id).last&.status
+    return nil if statuses == 'quiet'
+    statuses
+  end
 
 
 
@@ -142,39 +162,8 @@ class KamigoController < ApplicationController
      a.to_s
   end
 
-  def channel_status(channel_id, received_text)
-    channel = Channel.find_or_create_by(channel_id: channel_id)
-    channel.status = 'speak'
-    channel.save
-    
-  end
-
-
-    # 改變聊天室狀態關鍵字
-  def channel_quite(channel_id, received_text)
-    return nil unless received_text[0..4] == '米煮波安靜' 
-    channel = Channel.find_or_create_by(channel_id: channel_id)
-    channel.status = 'quiet'
-    channel.save
-
-    '豪QQ'
-  end
-
-
-    # 改變聊天室狀態關鍵字
-  def channel_speak(channel_id, received_text)
-    return nil unless received_text[0..4] == '米煮波講話' 
-    channel = Channel.find_or_create_by(channel_id: channel_id)
-    channel.status = 'speak'
-    channel.save
-
-    '好喔好喔'
-  end
-
 
  
-
-
 
 
   def dinner(received_text)
