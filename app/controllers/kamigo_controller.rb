@@ -11,10 +11,9 @@ class KamigoController < ApplicationController
     # 閉嘴
     reply_text = channel_quite(channel_id, received_text)if reply_text.nil?
     
-    # 檢測聊天室狀態
-    status = channel_status(channel_id)
-    
-    if  status == 'quiet'
+
+
+    if  channel.status == 'quiet'
       # 回應 200
       head :ok
 
@@ -169,12 +168,7 @@ class KamigoController < ApplicationController
   end
 
 
-   # 檢測聊天室狀態
-  def channel_status(channel_id)
-    statuses = ChannelStatus.where(channel_id: channel_id).last&.status
-    return nil if statuses == 'quiet'
-    statuses
-  end
+ 
 
 
 
