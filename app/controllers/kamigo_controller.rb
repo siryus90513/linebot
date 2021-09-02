@@ -132,9 +132,6 @@ class KamigoController < ApplicationController
   end
 
 
- 
-
-
 
 
   def dinner(received_text)
