@@ -27,6 +27,8 @@ class KamigoController < ApplicationController
     reply_text = learn(channel_id, received_text)
 
 
+
+
     reply_text = channel_speak(channel_id, received_text) if reply_text.nil?
 
 
@@ -154,6 +156,7 @@ class KamigoController < ApplicationController
     channel = Channel.find_or_create_by(channel_id: channel_id)
     channel.status = 'quiet'
     channel.save
+    
     '豪QQ'
   end
 
@@ -164,6 +167,7 @@ class KamigoController < ApplicationController
     channel = Channel.find_or_create_by(channel_id: channel_id)
     channel.status = 'speak'
     channel.save
+
     '好喔好喔'
   end
 
