@@ -8,7 +8,7 @@ class KamigoController < ApplicationController
     reply_text = channel_speak(channel_id, received_text) 
 
     # 閉嘴
-    reply_text = channel_quite(channel_id, received_text)if reply_text.nil?
+    reply_text = channel_quite(channel_id, received_text)
 
     
     
