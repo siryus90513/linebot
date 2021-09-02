@@ -6,9 +6,8 @@ class KamigoController < ApplicationController
   def webhook
     # 改變聊天室狀態
 
-    reply_text = channel_status(channel_id, received_text)
-    
-  
+    reply_text = channel_status(channel_id, received_text) if reply_text.nil?
+     
 
     if ChannelStatus.status == 'quiet'
       # 回應 200
@@ -20,8 +19,6 @@ class KamigoController < ApplicationController
 
     # 學說話
     reply_text = learn(channel_id, received_text)
-
-   
 
 
     # 算
@@ -55,9 +52,6 @@ class KamigoController < ApplicationController
 
 
 
-
-
-
   def get_weather(received_text)
     return nil unless received_text.include? '天氣'
     
@@ -65,36 +59,6 @@ class KamigoController < ApplicationController
     '自己看天上阿'
   end
 
-   def get_weather_from_cwb
-    uri = URI('https://www.cwb.gov.tw/Data/js/obs_img/Observe_radar_rain.js')
-    response = Net::HTTP.get(uri)
-    image_url = response.match /(CV1_RCNT_3600\/CV1_RCNT_3600_[0-9]*.png)/
-    # start_index = response.index('","') + 3
-    # end_index = response.index('"),') - 1
-    "https://www.cwb.gov.tw/Data/radar_rain/" + image_url
-  end
-
-
-
-
-
-  # 傳送圖片到 line
-  def reply_image_to_line(reply_image)
-    return nil if reply_image.nil?
-    
-    # 取得 reply token
-    reply_token = params['events'][0]['replyToken']
-    
-    # 設定回覆訊息
-    message = {
-      type: "image",
-      originalContentUrl: reply_image,
-      previewImageUrl: reply_image
-    }
-
-    # 傳送訊息
-    line.reply_message(reply_token, message)
-  end
 
   # 頻道 ID
   def channel_id
@@ -154,7 +118,7 @@ class KamigoController < ApplicationController
     # 改變聊天室狀態關鍵字
   def channel_status(channel_id, received_text)
     return nil unless received_text[0..4] == '米煮波講話' or  received_text[0..4] == '米煮波安靜' 
-    Channnel.find_or_create_by(channel_id: channel_id; status: 'quiet')
+    Channnel.find_or_create_by(channel_id: channel_id; status: 'speak')
 
     if  received_text[0..4] == '米煮波講話'
          Channnel.status = 'speak'
