@@ -5,12 +5,14 @@ class KamigoController < ApplicationController
 
   def webhook
 
-     # 改變聊天室狀態
-    reply_text = change_channel_status(channel_id, received_text)
+   
+    # 閉嘴
+    reply_text = channel_quite(channel_id, received_text)
+
+    reply_text = channel_speak(channel_id, received_text)
     
     # 檢測聊天室狀態
-    channelstatus = channel_status(channel_id) 
-    if channelstatus.nil?
+    if  channel_status(channel_id).nil?
       # 回應 200
       head :ok
 
@@ -145,12 +147,24 @@ class KamigoController < ApplicationController
   end
 
     # 改變聊天室狀態關鍵字
-  def change_channel_status(channel_id, received_text)
-    return nil unless received_text[0..5] == '米煮波安靜' or received_text[0..5] == '米煮波講話'
-    ChannelStatus.create(channel_id: channel_id, status: 'quiet') if received_text[0..5] == '米煮波安靜'
-    ChannelStatus.create(channel_id: channel_id, status: 'speak') if received_text[0..5] == '米煮波講話'
-    '豪'
+  def channel_quite(channel_id, received_text)
+    return nil unless received_text[0..4] == '米煮波安靜' 
+    channel = Channel.find_or_create_by(channel_id: channel_id)
+    channel.status = 'quiet'
+    channel.save
+    '豪QQ'
   end
+
+
+    # 改變聊天室狀態關鍵字
+  def channel_speak(channel_id, received_text)
+    return nil unless received_text[0..4] == '米煮波講話' 
+    channel = Channel.find_or_create_by(channel_id: channel_id)
+    channel.status = 'speak'
+    channel.save
+    '好喔好喔'
+  end
+
 
    # 檢測聊天室狀態
   def channel_status(channel_id)
@@ -222,7 +236,7 @@ class KamigoController < ApplicationController
 
 
 
-# 關鍵字回覆
+  # 關鍵字回覆
   def keyword_reply(channel_id, received_text)
     message = KeywordMapping.where(channel_id: channel_id, keyword: received_text).last&.message
     return message unless message.nil?
