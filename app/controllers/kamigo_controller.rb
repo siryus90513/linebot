@@ -47,7 +47,7 @@ class KamigoController < ApplicationController
     return nil unless received_text.include? '天氣'
     
     # https://opendata.cwb.gov.tw/fileapi/v1/opendataapi//v1/rest/datastore/F-D0047-029?Authorization=CWB-95156399-D12A-4ACA-89AF-3BF8070A2999&format=XML
-    
+    '自己看天上阿'
   end
 
    def get_weather_from_cwb
@@ -127,7 +127,7 @@ class KamigoController < ApplicationController
 
     a = received_text
 
-     a.to_s 
+     'a'
   end
 
 
