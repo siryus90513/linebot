@@ -5,13 +5,6 @@ class KamigoController < ApplicationController
 
   def webhook
 
- 
-
-    
-   
-    
-
-
     if  channel.status(channel_id) == 'quiet'
       # 回應 200
       head :ok
@@ -20,16 +13,16 @@ class KamigoController < ApplicationController
     end
 
     # 查天氣 
-    reply_text = get_weather(received_text) if reply_text.nil?
+    reply_text = get_weather(received_text)
 
     # 學說話
     reply_text = learn(channel_id, received_text)
 
     # 閉嘴
-    reply_text = channel_quite(channel_id, received_text)if reply_text.nil?
+    reply_text = channel_quite(channel_id, received_text)
 
 
-    reply_text = channel_speak(channel_id, received_text) if reply_text.nil?
+    reply_text = channel_speak(channel_id, received_text) 
 
 
     # 算
