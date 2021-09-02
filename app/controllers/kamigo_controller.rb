@@ -23,10 +23,7 @@ class KamigoController < ApplicationController
     # 學說話
     reply_text = learn(channel_id, received_text)
 
-    # 紀錄頻道
-    channel = Channel.find_or_create_by(channel_id: channel_id)
-    channel.status = 'speak'
-    channel.save
+
 
 
     # 算
