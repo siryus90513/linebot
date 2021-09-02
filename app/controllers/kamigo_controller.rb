@@ -12,8 +12,7 @@ class KamigoController < ApplicationController
       return 
     end
 
-    # 查天氣 
-    reply_text = get_weather(received_text)
+   
 
     # 學說話
     reply_text = learn(channel_id, received_text)
