@@ -1,2 +1,0 @@
-class ChannelStatus < ApplicationRecord
-end

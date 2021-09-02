@@ -154,13 +154,13 @@ class KamigoController < ApplicationController
     # 改變聊天室狀態關鍵字
   def channel_status(channel_id, received_text)
     return nil unless received_text[0..4] == '米煮波講話' or  received_text[0..4] == '米煮波安靜' 
-    ChannelStatus.find_or_create_by(channel_id: channel_id; status: 'quiet')
+    Channnel.find_or_create_by(channel_id: channel_id; status: 'quiet')
 
     if  received_text[0..4] == '米煮波講話'
-         ChannelStatus.status = 'speak'
+         Channnel.status = 'speak'
 
     elsif received_text [0..4] == '米煮波安靜'
-         ChannelStatus.status = 'quiet'
+         Channnel.status = 'quiet'
      end 
     
 
