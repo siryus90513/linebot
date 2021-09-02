@@ -5,11 +5,28 @@ class KamigoController < ApplicationController
 
   def webhook
 
+     # 改變聊天室狀態
+    reply_text = change_channel_status(channel_id, received_text)
+    
+    # 檢測聊天室狀態
+    channelstatus = channel_status(channel_id) 
+    if channelstatus.nil?
+      # 回應 200
+      head :ok
+
+      return 
+    end
+
     # 查天氣 
     reply_text = get_weather(received_text) if reply_text.nil?
 
     # 學說話
     reply_text = learn(channel_id, received_text)
+
+    # 紀錄頻道
+    channel = Channel.find_or_create_by(channel_id: channel_id)
+    channel.status = 'speak'
+    channel.save
 
 
     # 算
@@ -130,6 +147,21 @@ class KamigoController < ApplicationController
      a.to_s
   end
 
+    # 改變聊天室狀態關鍵字
+  def change_channel_status(channel_id, received_text)
+    return nil unless received_text[0..5] == '米煮波安靜' or received_text[0..5] == '米煮波講話'
+    ChannelStatus.create(channel_id: channel_id, status: 'quiet') if received_text[0..5] == '米煮波安靜'
+    ChannelStatus.create(channel_id: channel_id, status: 'speak') if received_text[0..5] == '米煮波講話'
+    '豪'
+  end
+
+   # 檢測聊天室狀態
+  def channel_status(channel_id)
+    statuses = ChannelStatus.where(channel_id: channel_id).last&.status
+    return nil if statuses == 'quiet'
+    statuses
+  end
+
 
 
 
@@ -155,6 +187,8 @@ class KamigoController < ApplicationController
       '阿寶','123早餐屋','早餐吃啥','麥當勞','肯德基','初八拉麵','鹿初Brunch','布格早午餐','吉多多早午餐店','歐伊系精緻早餐',
       '豐正食堂','阿基鍋燒麵','窩不知道','八方雲集','我想一下','王仔','小間早午餐','嘉農'].sample
   end
+
+ 
 
 
   # 學說話
