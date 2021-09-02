@@ -22,7 +22,7 @@ class KamigoController < ApplicationController
     reply_text = channel_quite(channel_id, received_text)
 
 
-    reply_text = channel_speak(channel_id, received_text) 
+    reply_text = channel_speak(channel_id, received_text) if reply_text.nil?
 
 
     # 算
