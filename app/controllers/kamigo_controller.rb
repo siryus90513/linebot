@@ -127,7 +127,7 @@ class KamigoController < ApplicationController
 
     a = received_text
 
-     'a.to_s' 
+     a.to_s 
   end
 
 
