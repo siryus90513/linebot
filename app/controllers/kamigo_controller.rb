@@ -8,12 +8,11 @@ class KamigoController < ApplicationController
  
 
     
-    # 閉嘴
-    reply_text = channel_quite(channel_id, received_text)if reply_text.nil?
+   
     
 
 
-    if  channel.status == 'quiet'
+    if  channel.status(channel_id) == 'quiet'
       # 回應 200
       head :ok
 
@@ -26,7 +25,8 @@ class KamigoController < ApplicationController
     # 學說話
     reply_text = learn(channel_id, received_text)
 
-
+    # 閉嘴
+    reply_text = channel_quite(channel_id, received_text)if reply_text.nil?
 
 
     reply_text = channel_speak(channel_id, received_text) if reply_text.nil?
@@ -150,13 +150,21 @@ class KamigoController < ApplicationController
      a.to_s
   end
 
+  def channel_status(channel_id, received_text)
+    channel = Channel.find_or_create_by(channel_id: channel_id)
+    channel.status = 'speak'
+    channel.save
+    
+  end
+
+
     # 改變聊天室狀態關鍵字
   def channel_quite(channel_id, received_text)
     return nil unless received_text[0..4] == '米煮波安靜' 
     channel = Channel.find_or_create_by(channel_id: channel_id)
     channel.status = 'quiet'
     channel.save
-    
+
     '豪QQ'
   end
 
