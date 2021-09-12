@@ -4,28 +4,43 @@ class KamigoController < ApplicationController
   protect_from_forgery with: :null_session
 
   def webhook
-   
+      # 查天氣
+  reply_image = get_weather(received_text) 
+
+  # 有查到的話 後面的事情就不作了
+  unless reply_image.nil?
+    # 傳送訊息到 line
+    response = reply_image_to_line(reply_image)
+
+    # 回應 200
+    head :ok
+
+    return 
+  end
+
 
     # 學說話
     reply_text = learn(channel_id, received_text)
 
-    # 算
-    reply_text = calcu(received_text) if reply_text.nil?
-
     # 選 A/B/C
+
     reply_text = choose(received_text) if reply_text.nil?
     
-    # dinner 
+     # dinner 
     reply_text = dinner(received_text) if reply_text.nil?
 
     # chooselunch 
     reply_text = chooselunch(received_text) if reply_text.nil?
 
-    # 推齊
+     # 推齊
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
 
     # 關鍵字回覆
     reply_text = keyword_reply(channel_id, received_text) if reply_text.nil?
+
+   
+
+   
 
     # 記錄對話
     save_to_received(channel_id, received_text)
@@ -39,13 +54,59 @@ class KamigoController < ApplicationController
   end 
 
 
-
   def get_weather(received_text)
     return nil unless received_text.include? '天氣'
-    
-    # https://opendata.cwb.gov.tw/fileapi/v1/opendataapi//v1/rest/datastore/F-D0047-029?Authorization=CWB-95156399-D12A-4ACA-89AF-3BF8070A2999&format=XML
+    # upload_to_imgur(get_weather_from_cwb)
+
+    '天氣真好'
   end
 
+  #增加一個上傳圖片到 imgur 的函數
+   def upload_to_imgur(image_url)
+    url = URI("https://api.imgur.com/3/image")
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    request = Net::HTTP::Post.new(url)
+    request["authorization"] = 'Client-ID 31892b5246933aa'
+
+    request.set_form_data({"image" => image_url})
+    response = http.request(request)
+    json = JSON.parse(response.read_body)
+    puts json
+    begin
+      json['data']['link'].gsub("http:","https:")
+    rescue
+      nil
+    end
+  end
+
+  #增加一個取得最新雷達回波圖的函數
+   def get_weather_from_cwb
+    uri = URI('https://www.cwb.gov.tw/Data/js/obs_img/Observe_radar_rain.js')
+    response = Net::HTTP.get(uri)
+    image_url = response.match /(CV1_RCNT_3600\/CV1_RCNT_3600_[0-9]*.png)/
+    # start_index = response.index('","') + 3
+    # end_index = response.index('"),') - 1
+    "https://www.cwb.gov.tw/Data/radar_rain/" + image_url
+  end
+
+  # 傳送圖片到 line
+  def reply_image_to_line(reply_image)
+    return nil if reply_image.nil?
+    
+    # 取得 reply token
+    reply_token = params['events'][0]['replyToken']
+    
+    # 設定回覆訊息
+    message = {
+      type: "image",
+      originalContentUrl: reply_image,
+      previewImageUrl: reply_image
+    }
+
+    # 傳送訊息
+    line.reply_message(reply_token, message)
+  end
 
   # 頻道 ID
   def channel_id
@@ -88,8 +149,6 @@ class KamigoController < ApplicationController
 
 
 
-
-
   def dinner(received_text)
 
     return nil unless received_text[0..2] == '晚餐吃'
@@ -112,8 +171,6 @@ class KamigoController < ApplicationController
       '阿寶','123早餐屋','早餐吃啥','麥當勞','肯德基','初八拉麵','鹿初Brunch','布格早午餐','吉多多早午餐店','歐伊系精緻早餐',
       '豐正食堂','阿基鍋燒麵','窩不知道','八方雲集','我想一下','王仔','小間早午餐','嘉農'].sample
   end
-
- 
 
 
   # 學說話
@@ -150,7 +207,7 @@ class KamigoController < ApplicationController
 
 
 
-  # 關鍵字回覆
+# 關鍵字回覆
   def keyword_reply(channel_id, received_text)
     message = KeywordMapping.where(channel_id: channel_id, keyword: received_text).last&.message
     return message unless message.nil?
