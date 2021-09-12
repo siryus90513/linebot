@@ -4,22 +4,10 @@ class KamigoController < ApplicationController
   protect_from_forgery with: :null_session
 
   def webhook
-    # 改變聊天室狀態
-
-    reply_text = channel_status(channel_id, received_text) if reply_text.nil?
-     
-
-    if ChannelStatus.status == 'quiet'
-      # 回應 200
-      head :ok
-
-      return 
-    end
-
+   
 
     # 學說話
     reply_text = learn(channel_id, received_text)
-
 
     # 算
     reply_text = calcu(received_text) if reply_text.nil?
@@ -56,7 +44,6 @@ class KamigoController < ApplicationController
     return nil unless received_text.include? '天氣'
     
     # https://opendata.cwb.gov.tw/fileapi/v1/opendataapi//v1/rest/datastore/F-D0047-029?Authorization=CWB-95156399-D12A-4ACA-89AF-3BF8070A2999&format=XML
-    '自己看天上阿'
   end
 
 
@@ -98,38 +85,7 @@ class KamigoController < ApplicationController
 
   end
 
-  def calcu(received_text)
 
-    return nil unless received_text[0] == '算'
-
-    received_text = received_text[1..-1]
-
-    a = "#{received_text}"
-
-     a.to_s
-  end
-
-
-
-
-   
-
-
-    # 改變聊天室狀態關鍵字
-  def channel_status(channel_id, received_text)
-    return nil unless received_text[0..4] == '米煮波講話' or  received_text[0..4] == '米煮波安靜' 
-    Channnel.find_or_create_by(channel_id: channel_id; status: 'speak')
-
-    if  received_text[0..4] == '米煮波講話'
-         Channnel.status = 'speak'
-
-    elsif received_text [0..4] == '米煮波安靜'
-         Channnel.status = 'quiet'
-     end 
-    
-
-    '好'
-  end
 
 
 
