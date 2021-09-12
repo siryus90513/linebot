@@ -22,17 +22,24 @@ class KamigoController < ApplicationController
     # 學說話
     reply_text = learn(channel_id, received_text)
 
+  
+
+
+
     # 選 A/B/C
 
     reply_text = choose(received_text) if reply_text.nil?
     
-     # dinner 
+    # dinner 
+
     reply_text = dinner(received_text) if reply_text.nil?
 
     # chooselunch 
+
     reply_text = chooselunch(received_text) if reply_text.nil?
 
      # 推齊
+
     reply_text = echo2(channel_id, received_text) if reply_text.nil?
 
     # 關鍵字回覆
@@ -216,11 +223,7 @@ class KamigoController < ApplicationController
 
   # 傳送訊息到 line
   def reply_to_line(reply_text)
-     reply_text = ['蛤','三小','哈哈','喔是喔','what up','用不到','你說的都對','好喔','靠邀','白爛',
-      '好笑嗎','好問題呢','寶','520','7414','幹不要','不知道ㄟ','真的喔','好很喔','好強喔',
-      '你這人真噁心','你很棒','三小','為什麼','什麼拉','再一年','怎麼了','到底是三小','好醜喔','睡起來就好了',
-      '你在搞啥','對阿','真的差不多','真假','怎','喔','好貼心喔','吐了','別搞笑','卯米',
-      '要愛愛','真的ㄟ','0','快樂快樂','感謝你的提醒','發你洗澡卡','(。•́︿•̀。)','勞贖','老子直接在你聊天室大優惠','大大大優惠'].sample if reply_text.nil?
+    return if reply_text.nil?
     
     
     # 取得 reply token
